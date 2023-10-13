@@ -1,0 +1,228 @@
+@model LojaT.Models.ViewModel.ClienteEditViewModel
+
+@{
+    var errorMessage = TempData["ErrorMessage"] as string;
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <script>
+        toastr.error('@errorMessage');
+    </script>
+}
+
+@{
+    ViewData["Title"] = "Editar Cliente";
+}
+
+<h2>Editar Cliente</h2>
+<div class="mb-2">
+    <a class="btn btn-light" asp-action="Index">Voltar</a>
+</div>
+<hr />
+<form asp-action="Edit">
+    <div class="row-12 p-2" method="get">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="form-group col-md-7">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" maxlength="150" data-toggle="tooltip" data-placement="bottom" title="@Model.GetDescription(m => m.Nome)" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-5">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" maxlength="150" data-toggle="tooltip" data-placement="bottom" title="@Model.GetDescription(m => m.Email)" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label asp-for="Telefone" class="control-label"></label>
+                <input asp-for="Telefone" class="form-control" data-toggle="tooltip" data-placement="bottom" title="@Model.GetDescription(m => m.Telefone)" />
+                <span asp-validation-for="Telefone" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-3">
+                <label asp-for="DataCadastro" class="control-label"></label>
+                <input asp-for="DataCadastro" class="form-control" readonly />
+            </div>
+        </div>
+        <div>
+            <h4>Informações Pessoais</h4>
+            <hr />
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="TipoPessoa" class="control-label"></label>
+                    <select asp-for="TipoPessoa" id="TipoPessoa" class="form-control" data-toggle="tooltip" data-placement="bottom" title="@Model.GetDescription(m => m.TipoPessoa)">
+                        <option value="">Selecione...</option>
+                        <option value="Jurídica">Jurídica</option>
+                        <option value="Física">Física</option>
+                    </select>
+                    <span asp-validation-for="TipoPessoa" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="CpfCnpj" class="control-label"></label>
+                    <input asp-for="CpfCnpj" id="CpfCnpj" class="form-control" data-toggle="tooltip" data-placement="bottom" title="@Model.GetDescription(m => m.CpfCnpj)"/>
+                    <span asp-validation-for="CpfCnpj" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <div class="row">
+                        <label asp-for="InscricaoEstadual" class="control-label col-8 col-lg-9"></label>
+                        <label class="form-check-label col-3" data-toggle="tooltip" data-placement="bottom" title="@Model.GetDescription(m => m.Isento)">
+                            <input class="form-check-input" asp-for="Isento" /> @Html.DisplayNameFor(model => model.Isento)
+                        </label>
+                    </div>
+                    <input asp-for="InscricaoEstadual" class="form-control"  data-toggle="tooltip" data-placement="bottom" title="@Model.GetDescription(m => m.InscricaoEstadual)" />
+                    <span asp-validation-for="InscricaoEstadual" class="text-danger"></span>
+                </div>
+                <div class="col" id="infoPessoaFisica" style="display: none;">
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label asp-for="Genero" class="control-label"></label>
+                            <select asp-for="Genero" class="form-control" data-toggle="tooltip" data-placement="bottom" title="@Model.GetDescription(m => m.Genero)">
+                            <option value="">Selecione...</option>
+                            <option value="Feminino">Feminino</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Outro">Outro</option>
+                            </select>
+                            <span asp-validation-for="Genero" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label asp-for="DataNascimento" class="control-label"></label>
+                            <input asp-for="DataNascimento" class="form-control" data-toggle="tooltip" data-placement="bottom" title="@Model.GetDescription(m => m.DataNascimento)"/>
+                            <span asp-validation-for="DataNascimento" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>  
+        <div>
+            <div class="form-group form-check">
+                <label class="form-check-label" data-toggle="tooltip" data-placement="bottom" title="@Model.GetDescription(m => m.Bloqueado)">
+                    <input class="form-check-input" asp-for="Bloqueado" /> @Html.DisplayNameFor(model => model.Bloqueado)
+                </label>
+            </div>
+        </div>
+        <div>
+            <h4>Senha de Acesso</h4>
+            <hr />
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label asp-for="Senha" class="control-label"></label>
+                    <input asp-for="Senha" class="form-control" data-toggle="tooltip" data-placement="bottom" title="@Model.GetDescription(m => m.Senha)" />
+                    <span asp-validation-for="Senha" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-4">
+                    <label asp-for="ConfirmarSenha" class="control-label"></label>
+                    <input asp-for="ConfirmarSenha" class="form-control" />
+                    <span asp-validation-for="ConfirmarSenha" class="text-danger"></span>
+                </div>
+            </div>
+        </div> 
+    </div>
+    <div class="form-group d-flex flex-row-reverse">
+        <input type="submit" value="Editar Cliente" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+  @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+  <script>
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+        
+        $('#Telefone').mask('(00)00000-0000');
+
+        if($('#TipoPessoa').val() === 'Física') $('#infoPessoaFisica').show();
+        else $('#infoPessoaFisica').hide();
+
+        if($('#TipoPessoa').val() !== 'Física' && $('#TipoPessoa').val() !== 'Jurídica')
+        {
+            $('#CpfCnpj').prop('disabled', true);
+            $('#CpfCnpj').attr('maxlength', '0');
+        }
+
+        $('#TipoPessoa').change(function () {
+            $('#CpfCnpj').val('');
+            $('#CpfCnpj').prop('disabled', false);
+            $('#Genero').rules('remove', 'required');
+            $('#Genero').valid();
+            $('#DataNascimento').rules('remove', 'required');
+            $('#InscricaoEstadual').rules('remove', 'required');
+            $('#InscricaoEstadual').valid();
+
+            if ($(this).val() === 'Jurídica') {
+                $('#CpfCnpj').attr('placeholder', '99.999.999/9999-99');
+                $('#CpfCnpj').attr('maxlength', '18');
+                
+                $('#Genero').valid(false);
+                
+                $("#InscricaoEstadual").rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Inscrição Estadual é obrigatória para Pessoa Jurídica."
+                    }
+                });
+
+                $('#infoPessoaFisica').hide();
+            } else if ($(this).val() === "Física") {
+                $('#CpfCnpj').attr('placeholder', '999.999.999-99');
+                $('#CpfCnpj').attr('maxlength', '14');
+                
+                $('#Genero').prop('disabled', false)
+                $("#Genero").rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Gênero é obrigatório para Pessoa Física."
+                    }
+                });
+
+                $('#DataNascimento').prop('disabled', false);
+                $("#DataNascimento").rules("add", {
+                    required: true,
+                    messages: {
+                        required: "Data de Nascimento é obrigatório para Pessoa Física."
+                    }
+                });
+
+                $('#infoPessoaFisica').show();
+            } else {
+                $('#Genero').prop("disabled", true);
+                $('#DataNascimento').prop("disabled", true);
+
+                $('#CpfCnpj').prop("disabled", true);
+                $('#CpfCnpj').attr('placeholder', '');
+                $('#CpfCnpj').attr('maxlength', '0');
+
+                $('#infoPessoaFisica').hide();
+            }
+        });
+
+        $('#CpfCnpj').on('input', function () {
+            var maskedValue;
+
+            if ($('#TipoPessoa').val() === 'Física') {
+                maskedValue = '000.000.000-00';
+            } else {
+                maskedValue = '00.000.000/0000-00';
+            }
+            
+            $(this).mask(maskedValue, { reverse: false });
+        });
+
+        if($('#Isento').is(':checked') == false) $('#InscricaoEstadual').mask('000.000.000-000', { reverse: false });
+        else $('#InscricaoEstadual').prop("readonly", true);
+
+        $('#Isento').change(function () {
+            if(this.checked) {
+                $('#InscricaoEstadual').unmask();
+                $('#InscricaoEstadual').prop("readonly", true);
+                $('#InscricaoEstadual').val('ISENTO');
+            } else {
+                $('#InscricaoEstadual').mask('000.000.000-000', { reverse: false });
+                $('#InscricaoEstadual').prop("readonly", false);
+                $('#InscricaoEstadual').val('');
+            }
+        });
+    });
+  </script>
+}

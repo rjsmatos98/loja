@@ -1,0 +1,112 @@
+@{
+    ViewData["Title"] = "Lista de Compradores";
+}
+<script>
+    function AplicarFiltro()
+    {
+        var filtroNome = $("#filtroNome").val();
+        var filtroEmail = $("#filtroEmail").val();
+        var filtroTelefone = $("#filtroTelefone").val();
+        var filtroDataCadastro = $("#filtroDataCadastro").val();
+        var filtroBloqueado = $("#filtroBloqueado").val();
+
+        $.ajax({
+            type: "GET",
+            url: "/Cliente/Filtrar", 
+            data: {
+                nome: filtroNome,
+                email: filtroEmail,
+                telefone: filtroTelefone,
+                dataCadastro: filtroDataCadastro,
+                bloqueado: filtroBloqueado,
+            },
+            success: function(data) {
+                $("#clientesTable").html(data);
+            }
+        });
+    }
+</script>
+
+<div class="row mb-2">
+    <div class="col-8 col-lg-9">
+        <h5>Consulte os seus Clientes cadastrados na sua Loja ou realize o cadastro de novos Cliente</h5>
+    </div>
+    <div class="col-4 col-lg-3 pl-0 text-right">
+        <a asp-action="Create" class="btn btn-primary">Adicionar Cliente</a>
+    </div>
+</div>
+<div class="row mb-2">
+    <div class="col-12 d-flex flex-row-reverse">
+        <button id="btnFiltrar" class="btn btn-info">Filtrar</button>
+    </div>
+    <div class="col-12" id="filtroClientes" style="display: none;">
+        <div class="row mx-1 my-2 bg-light rounded">
+            <div class="form-group col-md-7">
+                <label for="Nome">Nome/Razão Social</label>
+                <input type="text" id="filtroNome" class="form-control" name="Nome" value="@ViewBag.Nome" />
+            </div>
+            <div class="form-group col-md-5">
+                <label for="email">E-mail</label>
+                <input type="text" id="filtroEmail" class="form-control" name="Email" value="@ViewBag.Email" />
+            </div>
+            <div class="form-group col-sm-4 col-xl-3 ">
+                <label for="telefone">Telefone</label>
+                <input type="text" id="filtroTelefone" class="form-control" name="Telefone" value="@ViewBag.Telefone" />
+            </div>
+            <div class="form-group col-sm-4 col-xl-3 ">
+                <label for="dataCadastro">Data de Cadastro</label>
+                <input type="date" id="filtroDataCadastro" class="form-control" name="DataCadastro" value="@ViewBag.DataCadastro" />
+            </div>
+            <div class="form-check col-sm-4 col-xl-3 ">
+                <label for="filtroBloqueado">Cliente bloqueado:</label>
+                <select id="filtroBloqueado" class="form-control" name="Bloqueado" value="@ViewBag.Bloqueado">
+                    <option value="">Selecione...</option>
+                    <option value="Sim">Sim</option>
+                    <option value="Não">Não</option>
+                </select>
+            </div>
+            <div class="col-12 col-12 col-xl-3 d-flex my-2 my-lg-auto justify-content-end">
+                <button type="button" id="limparFiltros" class="btn btn-secondary mr-2">Limpar Filtros</button>
+                <button type="button" id="aplicarFiltro" class="btn btn-primary">Aplicar Filtro</button>
+            </div>
+        </div>     
+    </div>
+</div>
+<div id="clientesTable" class="table-responsive rounded">
+    <partial name="_ClienteGridPartial" model="Model" />
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#filtroTelefone').mask('(00)00000-0000');
+
+        $("#aplicarFiltro").click(function() {
+            AplicarFiltro()
+        });
+
+        $("#selecionarTodos").change(function() {
+            var isChecked = $(this).prop("checked");
+
+            $(".row-checkbox").prop("checked", isChecked);
+        });
+
+        $("#btnFiltrar").click(function() {
+            $("#filtroClientes").toggle();
+        });
+
+        $("#btnAplicarFiltro").click(function() {
+            var nome = $("#filtroNome").val();
+            var email = $("#filtroEmail").val();
+            var telefone = $("#filtroTelefone").val();
+            var dataCadastro = $("#filtroDataCadastro").val();
+            var filtroBloqueado = $("#filtroBloqueado").val();
+
+            $("#filtroClientes").hide();
+        });
+
+        $("#limparFiltros").click(function() {
+            $("#filtroClientes input").val("");
+            $("#filtroClientes #filtroBloqueado").val(null);
+        });
+    });
+</script>

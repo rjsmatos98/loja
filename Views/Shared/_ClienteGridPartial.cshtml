@@ -1,0 +1,94 @@
+@model X.PagedList.IPagedList<LojaT.Models.ViewModel.ClienteGridViewModel>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
+
+<div class="mb-3">
+    @if (ViewBag.Nome != null){ <button class="btn btn-outline-secondary shadow-none mt-1 mt-md-0 btn-remove-filter" data-filter-name="Nome">Nome <i class="fa-solid fa-delete-left"></i></button> }
+    @if (ViewBag.Email != null){ <button class="btn btn-outline-secondary shadow-none mt-1 mt-md-0 btn-remove-filter" data-filter-name="Email">E-mail <i class="fa-solid fa-delete-left"></i></button> }
+    @if (ViewBag.Telefone != null){ <button class="btn btn-outline-secondary shadow-none mt-1 mt-md-0 btn-remove-filter" data-filter-name="Telefone">Telefone <i class="fa-solid fa-delete-left"></i></button> }
+    @if (ViewBag.DataCadastro != null){ <button class="btn btn-outline-secondary shadow-none mt-1 mt-md-0 btn-remove-filter" data-filter-name="DataCadastro">Data de Cadastro <i class="fa-solid fa-delete-left"></i></button> }
+    @if (ViewBag.Bloqueado != null){ <button class="btn btn-outline-secondary shadow-none mt-1 mt-md-0 btn-remove-filter" data-filter-name="Bloqueado">Bloqueado <i class="fa-solid fa-delete-left"></i></button> }
+</div>
+<table class="table table-hover table-striped table-bordered">
+  <thead>
+      <tr class="text-truncate">
+          <th class="text-center">
+              <input id="selecionarTodos" type="checkbox" value="" id="flexCheckDefault" />
+          </th>
+          <th>
+              Nome/Razão Social
+          </th>
+          <th>
+              E-mail
+          </th>
+          <th style="width: 150px;">
+              Telefone
+          </th>
+          <th>
+              Data de Cadastro
+          </th>
+          <th>
+              Bloqueado
+          </th>
+          <th>Ações</th>
+      </tr>
+  </thead>
+  <tbody>
+      @foreach (var cliente in Model) 
+      {
+          <tr>
+              <td class="text-center">
+                  <input id="selecionarTodos" class="row-checkbox" type="checkbox" name="rowsSelecionados" value="@cliente.Id"/>
+              </td>
+              <td>
+                  @Html.DisplayFor(modelItem => cliente.Nome)
+              </td>
+              <td>
+                  @Html.DisplayFor(modelItem => cliente.Email)
+              </td>
+              <td>
+                  @Html.DisplayFor(modelItem => cliente.Telefone)
+              </td>
+              <td>
+                  @Html.DisplayFor(modelItem => cliente.DataCadastro)
+              </td>
+              <td>
+                  @Html.DisplayFor(modelItem => cliente.Bloqueado)
+              </td>
+              <td>
+                  <a asp-action="Edit" asp-route-id="@cliente.Id">Editar</a>
+              </td>
+          </tr>
+      }
+  </tbody>
+</table>
+
+<div class="pagination-container" style="display: none;">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { nome = ViewBag.Nome, email = ViewBag.Email, telefone = ViewBag.Telefone, dataCadastro = ViewBag.DataCadastro, bloqueado = ViewBag.Bloqueado, Page = page }),
+        new PagedListRenderOptions
+        {
+            UlElementClasses = new string[] { "pagination justify-content-center" },
+            LiElementClasses = new string[] { "page-item" },
+            PageClasses = new string[] { "page-link" }
+        })
+</div>
+
+<script>
+    $(document).ready(function() {
+        var totalPages = @Model.PageCount;
+
+        $(".btn-remove-filter").click(function () {
+            var data = $(this).data("filter-name");
+            $("#filtro" + data).val('');
+
+            AplicarFiltro();
+        });
+
+        if (totalPages <= 1) {
+            $(".pagination-container").hide();
+        }
+        else {
+            $(".pagination-container").show();
+        }
+    });
+</script>
